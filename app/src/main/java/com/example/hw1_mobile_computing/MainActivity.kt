@@ -4,13 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.hw1_mobile_computing.ui.theme.HW1_Mobile_computingTheme
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -34,6 +31,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import kotlinx.serialization.Serializable
+
+@Serializable
+object Main
+
+@Serializable
+object More
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,14 +48,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             HW1_Mobile_computingTheme {
-                Scaffold(
-                    modifier = Modifier.fillMaxSize()
-                ) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                AppWithNavigator()
             }
         }
     }
@@ -101,9 +101,10 @@ fun Button(
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun MainScreen(
+    onNavigateToMore: () -> Unit
+) {
     HW1_Mobile_computingTheme {
 
         var imageColor by remember { mutableStateOf(Color.Red) }
@@ -117,18 +118,74 @@ fun GreetingPreview() {
             Greeting("Android")
             GreetingBold("Bold Android")
             ImageCard(imageColor)
-            Spacer(modifier = Modifier.padding(top=100.dp))
-            Greeting("One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin.\n" +
-                    "\n" +
-                    "He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections.\n" +
-                    "\n" +
-                    "The bedding was hardly able to cover it and seemed ready to slide off any moment.\n" +
-                    "\n" +
-                    "His many legs, pitifully ")
-            Spacer(modifier = Modifier.padding(top=100.dp))
-            Button("Click me!"){
+            Spacer(modifier = Modifier.padding(top = 100.dp))
+            Greeting(
+                "One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin.\n" +
+                        "\n" +
+                        "He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections.\n" +
+                        "\n" +
+                        "The bedding was hardly able to cover it and seemed ready to slide off any moment.\n" +
+                        "\n" +
+                        "His many legs, pitifully "
+            )
+            Spacer(modifier = Modifier.padding(top = 100.dp))
+            Button("Click me!") {
                 imageColor = Color.Blue
             }
+            Spacer(modifier = Modifier.padding(top = 10.dp))
+            Button("See more lorem ipsum!") {
+                onNavigateToMore()
+            }
+        }
+    }
+}
+
+@Composable
+fun MoreScreen(
+    onNavigateBack: () -> Unit
+) {
+    HW1_Mobile_computingTheme {
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(all = 80.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            GreetingBold("More Android Here!")
+            Greeting(
+                "One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin.\n" +
+                        "\n" +
+                        "He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections.\n" +
+                        "\n" +
+                        "The bedding was hardly able to cover it and seemed ready to slide off any moment.\n" +
+                        "\n" +
+                        "His many legs, pitifully "
+            )
+            Spacer(modifier = Modifier.padding(top = 10.dp))
+            Button("Go Back to Main Page.") {
+                onNavigateBack()
+            }
+        }
+    }
+}
+@Composable
+fun AppWithNavigator() {
+    val navController = rememberNavController()
+    NavHost(navController, startDestination = Main) {
+        composable<Main> {
+            MainScreen (
+                onNavigateToMore = {
+                    navController.navigate(route = More)
+                }
+            )
+        }
+        composable<More> {
+            MoreScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }
