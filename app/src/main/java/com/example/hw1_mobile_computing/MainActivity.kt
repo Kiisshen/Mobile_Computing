@@ -187,27 +187,6 @@ fun MainScreen(
             mutableStateOf(if (loadMainImageUri(context) != null) Uri.parse(loadMainImageUri(context)) else null)
         }
 
-        val lifecycleOwner = LocalLifecycleOwner.current
-        DisposableEffect(lifecycleOwner) {
-            val observer = LifecycleEventObserver { _, event ->
-                if (event == Lifecycle.Event.ON_RESUME) {
-                    val uriString = loadMainImageUri(context)
-                    mainImageUri = if (uriString != null) {
-                        Uri.parse(uriString)
-                    } else {
-                        null
-                    }
-                    mainTitle = loadMainTitle(context)
-                }
-            }
-
-            lifecycleOwner.lifecycle.addObserver(observer)
-
-            onDispose {
-                lifecycleOwner.lifecycle.removeObserver(observer)
-            }
-        }
-
         Column(
             modifier = Modifier
                 .verticalScroll(rememberScrollState()
