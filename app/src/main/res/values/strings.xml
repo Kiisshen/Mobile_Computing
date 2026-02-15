@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">HW1_Mobile_computing</string>
+    <string name="app_name">HW1 Mobile Computing</string>
+    <string name="channel_name">Shake Notifications</string>
+    <string name="channel_description">Notifications when fast movement is detected</string>
 </resources>
