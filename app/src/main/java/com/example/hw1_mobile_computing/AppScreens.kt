@@ -81,6 +81,12 @@ fun MainScreen(
     onEnableSensor: () -> Unit
 ) {
     val context = LocalContext.current
+    val permissionLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            if (granted) {
+                onEnableSensor()
+            }
+        }
     var items by remember { mutableStateOf(loadGalleryItems(context)) }
 
     LaunchedEffect(true) {
@@ -172,7 +178,7 @@ fun MainScreen(
                 )
 
                 EpicButton("ENABLE ACCELEROMETER") {
-                    onEnableSensor()
+                    permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }
 
                 Spacer(Modifier.height(60.dp))

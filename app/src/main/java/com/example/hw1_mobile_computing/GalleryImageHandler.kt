@@ -22,6 +22,8 @@ fun loadGalleryItems(context: Context): List<GalleryItem> {
     return if (json != null) Json.decodeFromString(json) else emptyList()
 }
 
+// Initially duplicate images imported from gallery would disappear without saving the actual
+// Image, this was fixed with makeImagePermanent function which is AI Generated (GPT 5.2).
 fun makeImagePermanent(context: Context, uri: Uri): Uri {
     return try {
         val inputStream = context.contentResolver.openInputStream(uri)

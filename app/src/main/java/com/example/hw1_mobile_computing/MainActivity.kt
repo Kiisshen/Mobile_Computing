@@ -12,13 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.hw1_mobile_computing.ui.theme.HW1_Mobile_computingTheme
-import kotlinx.serialization.Serializable
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-
-@Serializable object Main
-@Serializable object More
-@Serializable object Change
-@Serializable data class GalleryItem(val title: String, val imageUri: String)
 
 class MainActivity : ComponentActivity() {
 
